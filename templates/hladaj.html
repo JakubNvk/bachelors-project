@@ -1,0 +1,16 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Find</h1>
+    <form method="POST">
+        <dl>
+            <dt>From:</dt>
+            <dd><input type="text" name="frm"/></dd>
+            <dt>Where:</dt>
+            <dd><input type="text" name="where"/></dd>
+            <dd><input type="submit" value="find"/></dd>
+        </dl>
+    </form>
+    <p><font size="6"><b>{{ error_msg }}</b></font></p>
+{% endblock %}
