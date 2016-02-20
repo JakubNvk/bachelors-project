@@ -11,6 +11,7 @@ from flask import request
 from flask import redirect
 
 
+"""
 class Spoj(imhdsk.Drive):
 
     FORMAT = 'Line {0} leaving {1} from {2} arriving {3} at {4}.'
@@ -20,6 +21,7 @@ class Spoj(imhdsk.Drive):
 
     def __repr__(self):
         return self.Drive.start + self.Drive.dest
+"""
 
 def getCoordinates(address):
     ''' Returns coordinates for given address. '''
@@ -47,8 +49,9 @@ def getRoutes(frm, to):
         return routes
 
 app.route('/', methods=['GET', 'POST'])
-def find():
-
+def findRoutePage():
+    ''' Returns page where user can input addresses for point A and B of their
+        trip.'''
     error = None
     if request.method == 'POST':
         frm = request.form['frm']
@@ -60,16 +63,16 @@ def find():
             return flask.render_template("hladaj.html", error_msg=error)
 
         route = getFirstRoute(frm, to)
-        '''spoj = Spoj(route)'''
-        '''print spoj.__repr__()'''
+        # spoj = Spoj(route)
+        # print spoj.__repr__()
 
-        return found(frm, to, routes)
+        return foundRoutePage(frm, to, routes)
 
 @app.route('/found')
-def found(frm, to, result):
-    error = None
+def foundRoutePage(frm, to, result):
+    ''' Returns page with found results for users trip. '''
     return flask.render_template("najdene.html", frm=frm, where=to,
-                                 result=result, error=error)
+                                 result=result, error=None)
 
 if __name__ == '__main__':
     app.debug = True
