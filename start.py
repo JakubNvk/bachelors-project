@@ -41,12 +41,14 @@ def getFirstRoute(frm, to):
     routes = imhdsk.routes(frm, to, time='', date='')
     if len(routes) > 0:
         return routes[0]
+    print('No route found!')
 
 def getRoutes(frm, to):
     ''' Returns all available routes. '''
     routes = imhdsk.routes(frm, to, time='', date='')
     if len(routes) > 0:
         return routes
+    print('No routes found!')
 
 app.route('/', methods=['GET', 'POST'])
 def findRoutePage():
