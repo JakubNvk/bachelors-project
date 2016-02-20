@@ -52,7 +52,6 @@ app.route('/', methods=['GET', 'POST'])
 def findRoutePage():
     ''' Returns page where user can input addresses for point A and B of their
         trip.'''
-    error = None
     if request.method == 'POST':
         frm = request.form['frm']
         to = request.form['where']
@@ -60,7 +59,7 @@ def findRoutePage():
 
         if len(routes) == 0:
             error = 'Error: From/where is empty.'
-            return flask.render_template("hladaj.html", error_msg=error)
+            return flask.render_template("hladaj.html", error=None)
 
         route = getFirstRoute(frm, to)
         # spoj = Spoj(route)
