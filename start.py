@@ -1,6 +1,5 @@
 import flask
 import imhdsk
-import overpass
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 
@@ -41,16 +40,26 @@ def getFirstRoute(frm, to):
     routes = imhdsk.routes(frm, to, time='', date='')
     if len(routes) > 0:
         return routes[0]
-    print('No route found!')
+    print 'No route found!'
 
 def getRoutes(frm, to):
     ''' Returns all available routes. '''
     routes = imhdsk.routes(frm, to, time='', date='')
     if len(routes) > 0:
         return routes
-    print('No routes found!')
+    print 'No routes found!'
 
-app.route('/', methods=['GET', 'POST'])
+def getStopLocation(name):
+    ''' Returns latitude and longitude of bus stop called <name>. '''
+    stops = open('stops/stops.txt', 'r')
+    for line in stops:
+        if line == name:
+            return next(stops)
+
+def getNearestStop(location):
+    ''' Returns nearest stop to the provided location. '''
+
+@app.route('/', methods=['GET', 'POST'])
 def findRoutePage():
     ''' Returns page where user can input addresses for point A and B of their
         trip.'''
@@ -61,7 +70,7 @@ def findRoutePage():
 
         if len(routes) == 0:
             error = 'Error: From/where is empty.'
-            return flask.render_template("hladaj.html", error=None)
+            return flask.render_template("hladaj.html", error=error)
 
         route = getFirstRoute(frm, to)
         # spoj = Spoj(route)
