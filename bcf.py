@@ -1,17 +1,29 @@
+# -*- coding: UTF-8 -*-
 import imhdsk
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 
 
-def getCoordinates(address):
+STOPS = open('stops/stops.txt', 'r')
+
+class Location:
+    def __init__(self, latitude, longitude):
+        self.lat = latitude
+        self.lon = longitude
+
+    def __repr__(self):
+        return self.lat + ' ' + self.lon
+
+
+def getLocation(address):
     ''' Returns coordinates for given address. '''
     geolocator = Nominatim()
     location = geolocator.geocode(address)
-    return [location.latitude, location.longitude]
+    return Location(location.latitude, location.longitude)
 
-def getDistance(point_a, point_b):
+def getDistance(location_a, location_b):
     ''' Returns distance in meters and seconds between given points. '''
-    distance_meters = int(vincenty(point_a, point_b).meters)
+    distance_meters = int(vincenty(location_a, location_b).meters)
     distance_seconds = int(distance_meters)/1.4
     # 1.4m/s is the average walking speed of a human
     return [distance_meters, distance_seconds]
@@ -32,14 +44,19 @@ def getRoutes(frm, to):
 
 def getStopLocation(name):
     ''' Returns latitude and longitude of bus stop called <name>. '''
-    stops = open('stops/stops.txt', 'r')
-    for line in stops:
-        if line == name:
-            return next(stops)
+    lines = STOPS.readlines()
+    for i in range(0, len(lines)):
+        if lines[i].strip() == name:
+            coords = lines[i+1].strip().split(',')
+            return Location(coords[0], coords[1])
+            
 
 def getNearestStop(location):
     ''' Returns nearest stop to the provided location. '''
+    # for stop in STOPS:
 
+
+getStopLocation('Aupark')
 """
 class Spoj(imhdsk.Drive):
 

@@ -10,4 +10,4 @@ for link in soup.find_all('a'):
     res = []
     res.extend(parsed_link[0].split(','))
     print stop_name.encode(encoding='UTF-8')
-    print res[0] + ", " + res[1] + "\n"# + res[2] + ", " + res[3] + "\n"
+    print res[0] + ", " + res[1] + "\n" + res[2] + ", " + res[3] + "\n"

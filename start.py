@@ -22,9 +22,6 @@ def findRoutePage():
             return flask.render_template("hladaj.html", error=error)
 
         route = bcf.getFirstRoute(frm, to)
-        # spoj = Spoj(route)
-        # print spoj.__repr__()
-
         return foundRoutePage(frm, to, routes)
 
 @app.route('/found')
