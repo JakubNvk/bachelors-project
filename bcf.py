@@ -14,6 +14,9 @@ class Location:
     def __repr__(self):
         return self.lat + ' ' + self.lon
 
+    def getCoordList(self):
+        return (self.lat, self.lon)
+
 
 def getLocation(address):
     ''' Returns coordinates for given address. '''
@@ -23,7 +26,8 @@ def getLocation(address):
 
 def getDistance(location_a, location_b):
     ''' Returns distance in meters and seconds between given points. '''
-    distance_meters = int(vincenty(location_a, location_b).meters)
+    distance_meters = int(vincenty(location_a.getCoordList,
+                          location_b.getCoordList).meters)
     distance_seconds = int(distance_meters)/1.4
     # 1.4m/s is the average walking speed of a human
     return [distance_meters, distance_seconds]
