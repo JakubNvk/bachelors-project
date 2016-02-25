@@ -8,7 +8,11 @@ from flask import request
 from flask import redirect
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
+def home():
+    return flask.render_template("hladaj.html", error=None)
+
+@app.route('/find', methods=['GET', 'POST'])
 def findRoutePage():
     ''' Returns page where user can input addresses for point A and B of their
         trip.'''
