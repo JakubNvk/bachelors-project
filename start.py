@@ -2,6 +2,7 @@ import flask
 import bcf
 
 tmpl_dir = 'templates'
+sttc_dir = 'static'
 app = flask.Flask(__name__, template_folder=tmpl_dir)
 
 from flask import request

@@ -4,11 +4,17 @@
     <head>
         <title>{{ title }}</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-        <link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="http://openlayers.org/en/v3.14.0/css/ol.css" type="text/css">
+		<style>
+			.map {
+				height: 500px;
+        		width: 500px;
+			}
+		</style>
+		<script src="http://openlayers.org/en/v3.14.0/build/ol.js" type="text/javascript"></script>
     </head>
+
     <body>
-        <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
         {% block content %}{% endblock %}
     </body>
 </html>
