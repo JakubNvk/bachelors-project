@@ -12,20 +12,16 @@
             <dd><input type="submit" value="find"/></dd>
         </dl>
     </form>
-	<div id="map" class="map"></div>
-	<script type="text/javascript">
-		var map = new ol.Map({
-			target: 'map',
-			layers: [
-				new ol.layer.Tile({
-					source: new ol.source.OSM({layer: 'sat'})
-				})
-			],
-			view: new ol.View({
-				center: ol.proj.fromLonLat([17.1490, 48.1490]),
-				zoom: 11
-			})
-		});
-	</script>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+        var map = new ol.Map({
+            target: 'map',
+            layers: [new ol.layer.Tile({source: new ol.source.OSM({layer: 'sat'})})],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([17.1490, 48.1490]),
+                zoom: 11
+            })
+        });
+    </script>
     <p><font size="6"><b>{{ error_msg }}</b></font></p>
 {% endblock %}
