@@ -1,0 +1,465 @@
+Zástavka električky ŽST Vinohrady
+48.1857811 17.1331615
+
+Zástavka električky Odborárska
+48.1767018 17.1462562
+
+Zástavka električky Zlaté piesky
+48.1894747 17.1832841
+
+Zástavka električky Hlavná stanica
+48.1580612 17.1069616
+
+Zástavka električky Slovanet
+48.1559227 17.1423346
+
+Zástavka električky Saleziáni
+48.1551391 17.133958
+
+Zástavka električky STU
+48.1523201 17.1157568
+
+Zástavka električky Nám. Biely kríž
+48.1821751 17.1297673
+
+Zástavka električky Vozovňa Krasňany
+48.1888511 17.1362371
+
+Zástavka električky Černockého
+48.1996659 17.1475656
+
+Zástavka električky Kamenné nám.
+48.1455395 17.113559
+
+Zástavka električky ŽST Nové Mesto
+48.1715369 17.1454668
+
+Zástavka električky Trnavské mýto
+48.1578266 17.1274982
+
+Zástavka električky Vysoká
+48.1484611 17.1123005
+
+Zástavka električky Americké nám.
+48.151106 17.1179506
+
+Zástavka električky Kapucínska
+48.1449449 17.1049719
+
+Zástavka električky ŽST Nové Mesto
+48.1719398 17.1454366
+
+Zástavka električky Detvianska
+48.2111984 17.1548265
+
+Zástavka električky Žilinská
+48.1545357 17.1103665
+
+Zástavka električky Most SNP
+48.1397672 17.1056993
+
+Zástavka električky Molecova
+48.1493614 17.0631736
+
+Zástavka električky Jurigovo námestie
+48.1520959 17.0613428
+
+Zástavka električky Segnerova
+48.153643 17.0578354
+
+Zástavka električky Nad lúčkami
+48.1560222 17.0535376
+
+Zástavka električky Borská
+48.1621051 17.0485989
+
+Zástavka električky Karlova Ves
+48.1644645 17.0468962
+
+Zástavka električky Drobného
+48.1878915 17.036662
+
+Zástavka električky Americké nám.
+48.1508408 17.1181852
+
+Zástavka električky STU
+48.1512188 17.1160848
+
+Zástavka električky Jesenského
+48.142166 17.1102847
+
+Zástavka električky Astronomická
+48.1585697 17.1771889
+
+Zástavka električky Zátišie
+48.1719608 17.1413853
+
+Zástavka električky Ursínyho
+48.1619737 17.1238219
+
+Zástavka električky Pionierska
+48.1679236 17.1274638
+
+Zástavka električky Riazanská
+48.1731517 17.1271935
+
+Zástavka električky ŽST Vinohrady
+48.1859131 17.1336572
+
+Zástavka električky Pekná cesta
+48.1957361 17.143841
+
+Zástavka električky Hečkova
+48.2029016 17.1494608
+
+Zástavka električky Herlianska-OC Retro
+48.1570213 17.1563639
+
+Zástavka električky Malé Krasňany
+48.1910693 17.1388367
+
+Zástavka električky Poštová-Martinus
+48.1467137 17.1087702
+
+Zástavka električky Švantnerova
+48.1816487 17.0407981
+
+Zástavka električky Alexyho
+48.1845828 17.0379879
+
+Zástavka električky Dolné Krčace
+48.1703978 17.0495328
+
+Zástavka električky Horné Krčace
+48.1736765 17.0492079
+
+Zástavka električky Damborského
+48.178941 17.0442784
+
+Zástavka električky Lafranconi
+48.1452174 17.0780548
+
+Zástavka električky Mariánska
+48.1473993 17.1155267
+
+Zástavka električky Park kultúry
+48.1427052 17.0858182
+
+Zástavka električky Botanická záhrada
+48.1481357 17.0717803
+
+Zástavka električky Legionárska
+48.1547027 17.1236619
+
+Zástavka električky MiÚ Karlova Ves
+48.158733 17.0516049
+
+Zástavka električky Nová doba
+48.1650134 17.1347081
+
+Zástavka električky Odbojárov
+48.1620361 17.1318194
+
+Zástavka električky Polus City Center
+48.1685817 17.1381315
+
+Zástavka električky Shopping Palace
+48.1884508 17.1777535
+
+Zástavka električky Chatam Sófer
+48.1408687 17.0930282
+
+Zástavka električky Jurajov dvor
+48.1830088 17.1637702
+
+Zástavka električky Magnetová
+48.1798468 17.1544115
+
+Zástavka električky PPA Controll
+48.1854625 17.1706942
+
+Zástavka električky Šafárikovo námestie
+48.1417026 17.1157112
+
+Zástavka električky Nemocnica Ružinov
+48.1567037 17.1520925
+
+Zástavka električky Blumentál
+48.1535948 17.1187979
+
+Zástavka električky Hybešova
+48.2076722 17.1503896
+
+Zástavka električky Komisárky
+48.216186 17.1662226
+
+Zástavka električky Komisárky
+48.2162855 17.1665144
+
+Zástavka električky Mladá garda
+48.1773678 17.1280017
+
+Zástavka električky Púchovská
+48.2153654 17.1645903
+
+Zástavka električky Račianske mýto
+48.1579549 17.1205274
+
+Zástavka električky Záhumenice-Drevona
+48.2122916 17.159269
+
+Zástavka električky OD Saratov
+48.1916648 17.0351364
+
+Zástavka električky Pri kríži
+48.194736 17.0339237
+
+Zástavka električky Tomášikova
+48.1574257 17.1618369
+
+Zástavka električky Chlumeckého
+48.1584158 17.1750981
+
+Zástavka električky Súmračná
+48.1579795 17.1692868
+
+Zástavka električky Záhumenice-Drevona
+48.2116062 17.15835
+
+Zástavka električky Hečkova
+48.2031217 17.1495403
+
+Zástavka električky Černockého
+48.199315 17.1471856
+
+Zástavka električky Pekná cesta
+48.1952965 17.1433805
+
+Zástavka električky Malé Krasňany
+48.1912896 17.1390342
+
+Zástavka električky Vozovňa Krasňany
+48.1883502 17.1355642
+
+Zástavka električky Pionierska
+48.1693975 17.1272851
+
+Zástavka električky Račianske mýto
+48.1584725 17.1210004
+
+Zástavka električky Blumentál
+48.1538751 17.1189611
+
+Zástavka električky Trnavské mýto
+48.157623 17.1271676
+
+Zástavka električky Vysoká
+48.1487558 17.1129474
+
+Zástavka električky Kapucínska
+48.1451591 17.1055581
+
+Zástavka električky Zlaté piesky
+48.1894759 17.1826885
+
+Zástavka električky Nám. Ľ. Štúra
+48.140209 17.1096039
+
+Zástavka električky Jurigovo námestie
+48.1523141 17.0612493
+
+Zástavka električky Saleziáni
+48.1555414 17.1335261
+
+Zástavka električky Slovanet
+48.1557406 17.1407091
+
+Zástavka električky Púchovská
+48.2147824 17.1632955
+
+Zástavka električky Detvianska
+48.2110892 17.1546191
+
+Zástavka električky ŽST Vinohrady
+48.1857128 17.1333867
+
+Zástavka električky Nám. Biely kríž
+48.1825954 17.1302837
+
+Zástavka električky Mladá garda
+48.1779006 17.1281805
+
+Zástavka električky Riazanská
+48.1743883 17.127483
+
+Zástavka električky Ursínyho
+48.1624693 17.1242352
+
+Zástavka električky Hlavná stanica
+48.1577105 17.1067752
+
+Zástavka električky Námestie Franza Liszta
+48.156049 17.1073582
+
+Zástavka električky Poštová-Martinus
+48.1471841 17.1097765
+
+Zástavka električky Námestie SNP
+48.1451993 17.1116367
+
+Zástavka električky Jesenského
+48.1429334 17.1120069
+
+Zástavka električky Most SNP
+48.1397937 17.1051969
+
+Zástavka električky Chatam Sófer
+48.141198 17.0924593
+
+Zástavka električky Park kultúry
+48.1430645 17.0840806
+
+Zástavka električky Lafranconi
+48.1451568 17.0782391
+
+Zástavka električky Botanická záhrada
+48.1481265 17.0724726
+
+Zástavka električky Molecova
+48.149832 17.0629251
+
+Zástavka električky Segnerova
+48.1538512 17.0571133
+
+Zástavka električky Nad lúčkami
+48.1564879 17.0532684
+
+Zástavka električky MiÚ Karlova Ves
+48.1592601 17.0512874
+
+Zástavka električky Borská
+48.1626165 17.0482856
+
+Zástavka električky Karlova Ves
+48.1646427 17.0468161
+
+Zástavka električky Dolné Krčace
+48.1709178 17.0495359
+
+Zástavka električky Horné Krčace
+48.174194 17.0491125
+
+Zástavka električky Damborského
+48.1796779 17.0434042
+
+Zástavka električky Švantnerova
+48.1824495 17.0398173
+
+Zástavka električky Alexyho
+48.1860176 17.0374407
+
+Zástavka električky Drobného
+48.1886922 17.0363959
+
+Zástavka električky OD Saratov
+48.1922471 17.0349543
+
+Zástavka električky Pri kríži
+48.1950498 17.0338404
+
+Zástavka električky Mariánska
+48.1483509 17.1164788
+
+Zástavka električky Americké nám.
+48.1515864 17.1180952
+
+Zástavka električky Odborárske nám.
+48.1520063 17.1201636
+
+Zástavka električky Legionárska
+48.1549227 17.1240066
+
+Zástavka električky Trnavské mýto
+48.1577873 17.1275749
+
+Zástavka električky Odbojárov
+48.1616436 17.1314024
+
+Zástavka električky Nová doba
+48.1646412 17.1342885
+
+Zástavka električky Polus City Center
+48.1689435 17.1384329
+
+Zástavka električky Zátišie
+48.1714473 17.1408367
+
+Zástavka električky Odborárska
+48.1764233 17.145792
+
+Zástavka električky Magnetová
+48.1793259 17.1527756
+
+Zástavka električky Jurajov dvor
+48.1824684 17.1620987
+
+Zástavka električky PPA Controll
+48.1849801 17.1692388
+
+Zástavka električky Shopping Palace
+48.1878657 17.1764562
+
+Zástavka električky Astronomická
+48.1585376 17.1763494
+
+Zástavka električky Chlumeckého
+48.1583171 17.1733694
+
+Zástavka električky Súmračná
+48.1578894 17.1676052
+
+Zástavka električky Tomášikova
+48.1573261 17.1600777
+
+Zástavka električky Herlianska-OC Retro
+48.1569417 17.1549158
+
+Zástavka električky Hybešova
+48.208242 17.1509866
+
+Zástavka električky Nemocnica Ružinov
+48.1566815 17.1513983
+
+Zástavka električky Žilinská
+48.1543071 17.1108053
+
+Zástavka električky Farského
+48.1276018 17.1169015
+
+Zástavka električky Farského
+48.1272404 17.1168363
+
+Zástavka električky Námestie Franza Liszta
+48.1560226 17.1074169
+
+Zástavka električky Jungmannova
+48.1244875 17.1149539
+
+Zástavka električky Jungmannova
+48.1248177 17.1154067
+
+Zástavka električky Sad Janka Kráľa
+48.1353448 17.1169879
+
+Zástavka električky Sad Janka Kráľa
+48.1358072 17.1170409
+
+Zástavka električky Šafárikovo nám.
+48.1413427 17.1161809
+
+Zástavka električky Vozovňa Jurajov dvor
+48.1813353 17.1614439
+
+Zástavka električky Vozovňa Jurajov dvor
+48.1815265 17.1613635
+
