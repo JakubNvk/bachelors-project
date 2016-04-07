@@ -156,15 +156,3 @@ trams = {'ŽST Vinohrady': [48.1857811, 17.1331615],
          'Vozovňa Jurajov dvor': [48.1813353, 17.1614439],
          'Vozovňa Jurajov dvor': [48.1815265, 17.1613635],
 }
-
-def get_tram_stop_location(name):
-   if name in trams:
-      return trams[name]
-   print('Tram stop is not in database.')
-
-def get_tram_stop_name(latitude, longitude):
-   try:
-       stop_name = trams.keys()[trams.values().index([latitude, longitude])]
-       return stop_name
-   except ValueError:
-       print('Cannot retrieve stop name from database.')
