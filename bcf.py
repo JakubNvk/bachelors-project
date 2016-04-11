@@ -49,25 +49,6 @@ def get_distance_seconds(distance_meters):
     distance_seconds = int(distance_meters)/1.4
     return distance_seconds
 
-def get_first_mhd(frm, to):
-    ''' Returns first available route. '''
-
-    routes = imhdsk.routes(frm, to, time='', date='')
-    if len(routes) == 0:
-        print('No route found!')
-        return
-    return routes[0]
-
-
-def get_mhd(frm, to):
-    ''' Returns all available routes. '''
-
-    routes = imhdsk.routes(frm, to, time='', date='')
-    if len(routes) == 0:
-        print('No routes found!')
-        return
-    return routes
-
 def get_nearest_stop(location):
     ''' Returns nearest stop to the provided location. '''
 
@@ -95,8 +76,8 @@ def get_tram_stop_name(lat_long):
         return trams_rev[lat_long]
     print('Tram with given latitude and longitude is not in database.')
 
-def find_route(frm, to):
-    ''' Finds route from location A to location B. '''
+def get_first_mhd(frm, to):
+    ''' Returns first available route. '''
 
     if frm == to:
         print('Location from and to are the same.')
@@ -106,6 +87,31 @@ def find_route(frm, to):
     loc_b = get_location(to)
     stop_a = get_nearest_stop(loc_a)
     stop_b = get_nearest_stop(loc_b)
-    print(get_first_mhd(normalize(stop_a), normalize(stop_b)))
 
-find_route('Ružinovská 2747', 'Kollárovo námestie')
+    routes = imhdsk.routes(normalize(stop_a), normalize(stop_b), time='',
+                                                                 date='')
+    if len(routes) == 0:
+        print('No route found!')
+        return
+    return routes[0]
+
+
+def get_mhd(frm, to):
+    ''' Returns all available routes. '''
+
+    if frm == to:
+        print('Location from and to are the same.')
+        return
+
+    loc_a = get_location(frm)
+    loc_b = get_location(to)
+    stop_a = get_nearest_stop(loc_a)
+    stop_b = get_nearest_stop(loc_b)
+
+    routes = imhdsk.routes(normalize(stop_a), normalize(stop_b), time='',
+                                                                 date='')
+    routes = imhdsk.routes(frm, to, time='', date='')
+    if len(routes) == 0:
+        print('No routes found!')
+        return
+    return routes
