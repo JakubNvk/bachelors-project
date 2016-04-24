@@ -12,6 +12,7 @@ from geopy.distance import vincenty
 
 MAPBOX = Directions()
 
+
 def normalize(stop):
     ''' Removes special characters from given stop.
 
@@ -26,6 +27,7 @@ def normalize(stop):
             normalized += letter
     return normalized
 
+
 def get_coordinates(address):
     ''' Returns set of coordinates for given address.
 
@@ -35,6 +37,7 @@ def get_coordinates(address):
     location = Nominatim(timeout=10).geocode(address)
     return (location.latitude, location.longitude)
 
+
 def get_address(location):
     ''' Returns adress for given set of coordinates.
 
@@ -43,6 +46,7 @@ def get_address(location):
 
     location = Nominatim(timeout=10).reverse(location)
     return location.address
+
 
 def get_distance_meters(location_a, location_b):
     ''' Returns distance in meters between given points.
@@ -55,6 +59,7 @@ def get_distance_meters(location_a, location_b):
                                    location_b).meters)
     return distance_meters
 
+
 def get_distance_seconds(location_a, location_b):
     ''' Returns distance in seconds between given points.
 
@@ -64,8 +69,9 @@ def get_distance_seconds(location_a, location_b):
 
     distance_meters = get_distance_meters(location_a, location_b)
     # 1.4m/s is the average walking speed of a human
-    distance_seconds = int(distance_meters)/1.4
+    distance_seconds = int(distance_meters) / 1.4
     return distance_seconds
+
 
 def get_midpoint(coord_list):
     ''' Returns middle point from coordinates in given coordinates list.
@@ -78,8 +84,9 @@ def get_midpoint(coord_list):
         lat, lon = coord_set
         lats += lat
         longs += lon
-    midpoint = (lats/len(coord_list), longs/len(coord_list))
+    midpoint = (lats / len(coord_list), longs / len(coord_list))
     return midpoint
+
 
 def get_nearest_stop(location):
     # add: second neareset and rename to find nearest stopS
@@ -98,6 +105,7 @@ def get_nearest_stop(location):
     for name, distance in stops.items():
         if distance == nearest:
             return name
+
 
 def get_stop_location(name, line_type=None):
     ''' Returns latitude and longitude of tram stop called <name>.
@@ -120,16 +128,18 @@ def get_stop_location(name, line_type=None):
     return None
     print('Stop is not in database.')
 
+
 def get_stop_name(lat_long):
     ''' Returns name of tram stop with <lat> and <long> coordinates.
 
         lat_long - coordinates set
     '''
-    
+
     for k, v in all_stops_rev.items():
         if lat_long in k:
             return v
     print('Stop with given latitude and longitude is not in database.')
+
 
 def get_mhd(frm, to):
     ''' Returns all available routes.
@@ -152,11 +162,12 @@ def get_mhd(frm, to):
     time = time.strftime("%H:%M")
 
     routes = imhdsk.routes(normalize(stop_frm), normalize(stop_to), time=time,
-                                                                    date='')
+                           date='')
     if len(routes) == 0:
         print('No routes found!')
         return None
     return routes
+
 
 def check_prefered_way(frm, to):
     ''' Checks if prefered way of transportation is walking or bus/tram.
@@ -172,7 +183,7 @@ def check_prefered_way(frm, to):
     '''
 
     walk = get_distance_seconds(frm, to)
-    walk = int(walk/60)
+    walk = int(walk / 60)
     if walk <= 15:
         return True
 
@@ -181,10 +192,11 @@ def check_prefered_way(frm, to):
     drives = routes[0].drives
     for drive in drives:
         bus += int(drive.length.strip(' min'))
-    
+
     if walk < bus:
         return True
     return False
+
 
 def identify_line(line):
     ''' TODO
@@ -204,16 +216,17 @@ def identify_line(line):
            '191', '192', '196', 'X13', 'N21', 'N29', 'N31', 'N33', 'N34', 'N37',
            'N44', 'N47', 'N53', 'N55', 'N56', 'N61', 'N70', 'N72', 'N74', 'N80',
            'N91', 'N93', 'N95', 'N99']
-    
+
     if line is not None:
         line = line.strip('[]')
-    
+
     if line in tram:
         return 'tram'
     if line in tbus:
         return 'tbus'
     if line in bus:
         return 'bus'
+
 
 def find(start, dest):
     ''' TODO
@@ -235,7 +248,7 @@ def find(start, dest):
         drive.start_c = start
         drive.dest = to
         drive.dest_c = dest
-        drive.length = int(get_distance_seconds(frm, to)/60)
+        drive.length = int(get_distance_seconds(frm, to) / 60)
         drive.walk = True
         drive.bus = False
         drive.tbus = False
@@ -259,7 +272,7 @@ def find(start, dest):
         to_stop.start_c = frm
         to_stop.dest = r[0].drives[0].start
         to_stop.dest_c = get_stop_location(to_stop.dest, line_type)
-        to_stop.length = int(get_distance_seconds(frm, to_stop.dest_c)/60)
+        to_stop.length = int(get_distance_seconds(frm, to_stop.dest_c) / 60)
         to_stop.walk = True
         to_stop.bus = False
         to_stop.tbus = False
@@ -270,9 +283,9 @@ def find(start, dest):
         for drv in d:
             line_type = identify_line(drv.line)
             if drv.walk:
-                drv.start_c = d[i-1].dest_c
-                drv.dest_c = get_stop_location(d[i+1].start,
-                                               identify_line(d[i+1].line))
+                drv.start_c = d[i - 1].dest_c
+                drv.dest_c = get_stop_location(d[i + 1].start,
+                                               identify_line(d[i + 1].line))
                 drv.bus = False
                 drv.tbus = False
                 drv.tram = False
@@ -306,7 +319,8 @@ def find(start, dest):
         from_stop.start_c = get_stop_location(from_stop.start, line_type)
         from_stop.dest = dest
         from_stop.dest_c = to
-        from_stop.length = int(get_distance_seconds(from_stop.start_c, to)/60)
+        from_stop.length = int(
+            get_distance_seconds(from_stop.start_c, to) / 60)
         from_stop.walk = True
         from_stop.bus = False
         from_stop.tbus = False
@@ -316,3 +330,19 @@ def find(start, dest):
         routes.append(route)
 
     return routes
+
+#print(Drive(), Drive().s)
+#print(check_prefered_way(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie')))
+#print(get_mhd(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie')))
+# print(get_stop_location('STU'))
+#print(get_stop_name((48.1523201, 17.1157568)))
+#print(get_midpoint([(48.146142, 17.1266071), (48.146354, 17.1268332), (48.1468069, 17.1262972), (48.1470263, 17.1263558), (48.1473287, 17.1258482), (48.1472883, 17.1275001), (48.1468974, 17.1291582), (48.1469268, 17.1288952), (48.1469553, 17.1286159), (48.1469687, 17.1290486), (48.1469769, 17.128354), (48.1470035, 17.128772), (48.1470268, 17.1291898), (48.147029, 17.1285067), (48.1470582, 17.1282339), (48.1470704, 17.1289288), (48.1470943, 17.1286499), (48.1471248, 17.1283876), (48.1471359, 17.1290878), (48.1471624, 17.128812), (48.147201, 17.1285467), (48.1472139, 17.1282693), (48.1472277, 17.1289672), (48.1472589, 17.128689), (48.1472752, 17.1284217), (48.1473015, 17.1291263), (48.1473383, 17.1288548), (48.1473639, 17.1285852), (48.147379, 17.1283067)]))
+#check_prefered_way(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie'))
+#mhd = get_mhd(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie'))
+print(find('Rovná 10', 'Kollárovo námestie 19'))
+# print(identify_line('[N93]'))
+#f = find('Rovná 2824/17, Bratislava', 'Kollárovo námestie 19')
+# for r in f:
+#    #print(r.drives)
+#    for d in r.drives:
+#        print(d.start, d.start_c, d.dest, d.dest_c, d.length, d.walk, d.bus, d.tbus, d.tram)

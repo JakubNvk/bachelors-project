@@ -9,6 +9,11 @@ from flask import redirect
 
 
 @app.route('/', methods=['GET', 'POST'])
+def find():
+    return flask.render_template('hladaj.html', error=None)
+
+
+@app.route('/find', methods=['GET', 'POST'])
 def findRoutePage():
     ''' Returns page where user can input addresses for point A and B of their
         trip.'''
@@ -19,18 +24,18 @@ def findRoutePage():
 
         if len(routes) == 0:
             error = 'Error: From/where is empty.'
-            return flask.render_template("hladaj.html", error=error)
+            return flask.render_template('hladaj.html', error=error)
 
         route = bcf.getFirstRoute(frm, to)
         return foundRoutePage(frm, to, routes)
 
+
 @app.route('/found')
 def foundRoutePage(frm, to, result):
     ''' Returns page with found results for users trip. '''
-    return flask.render_template("najdene.html", frm=frm, where=to,
+    return flask.render_template('najdene.html', frm=frm, where=to,
                                  result=result, error=None)
 
 if __name__ == '__main__':
     app.debug = True
     app.run()
-
