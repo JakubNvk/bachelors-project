@@ -34,7 +34,7 @@ def get_coordinates(address):
         address - string
     '''
 
-    location = Nominatim(timeout=10).geocode(address)
+    location = Nominatim(timeout=10).geocode('{}, Bratislava'.format(address))
     return (location.latitude, location.longitude)
 
 
@@ -199,7 +199,7 @@ def check_prefered_way(frm, to):
 
 
 def identify_line(line):
-    ''' TODO
+    ''' Identifies whether the line is bus, trolleybus or tram.
 
         line - string
     '''
@@ -229,7 +229,10 @@ def identify_line(line):
 
 
 def find(start, dest):
-    ''' TODO
+    ''' Finds routes from starting point to destination point. Creates a list
+        of Route objects which contain Drive objects with information about
+        length, start, destination, coordinates, line number and the type of
+        line.
 
         frm - coordinates set
         to - coordinates set
@@ -248,7 +251,8 @@ def find(start, dest):
         drive.start_c = start
         drive.dest = to
         drive.dest_c = dest
-        drive.length = int(get_distance_seconds(frm, to) / 60)
+        d_len = int(get_distance_seconds(frm, to) / 60)
+        drive.length = '{} min'.format(d_len)
         drive.walk = True
         drive.bus = False
         drive.tbus = False
@@ -259,6 +263,9 @@ def find(start, dest):
         return routes
 
     r = get_mhd(frm, to)
+    if r is None:
+        return None
+        print('get_mhd() returned no results.')
 
     for rt in r:
         i = 0
@@ -272,11 +279,18 @@ def find(start, dest):
         to_stop.start_c = frm
         to_stop.dest = r[0].drives[0].start
         to_stop.dest_c = get_stop_location(to_stop.dest, line_type)
-        to_stop.length = int(get_distance_seconds(frm, to_stop.dest_c) / 60)
+        to_len = int(get_distance_seconds(frm, to_stop.dest_c) / 60)
+        if to_len == 0:
+            # Minimum value for walk from point A to stop.
+            to_len = 1
+        to_stop.length = '{} min'.format(to_len)
         to_stop.walk = True
         to_stop.bus = False
         to_stop.tbus = False
         to_stop.tram = False
+        print(to_stop.start, to_stop.start_c, to_stop.dest, to_stop.dest_c,
+              to_stop.length, to_stop.walk, to_stop.bus, to_stop.tbus,
+              to_stop.tram)
         route.drives.append(to_stop)
 
         # Drives from/to stops/points (B_1, B_2, ..., B_n).
@@ -289,6 +303,8 @@ def find(start, dest):
                 drv.bus = False
                 drv.tbus = False
                 drv.tram = False
+                print(drv.start, drv.start_c, drv.dest, drv.dest_c, drv.length,
+                      drv.walk, drv.bus, drv.tbus, drv.tram)
                 continue
 
             drv.start_c = get_stop_location(drv.start, line_type)
@@ -319,30 +335,20 @@ def find(start, dest):
         from_stop.start_c = get_stop_location(from_stop.start, line_type)
         from_stop.dest = dest
         from_stop.dest_c = to
-        from_stop.length = int(
-            get_distance_seconds(from_stop.start_c, to) / 60)
+        from_len = int(get_distance_seconds(from_stop.start_c, to) / 60)
+        if from_len == 1:
+            # Minimum value for walk from stop to point B.
+            from_len = 0
+        from_stop.length = '{} min'.format(from_len)
         from_stop.walk = True
         from_stop.bus = False
         from_stop.tbus = False
         from_stop.tram = False
+        print(from_stop.start, from_stop.start_c, from_stop.dest,
+              from_stop.dest_c, from_stop.length, from_stop.walk, from_stop.bus,
+              from_stop.tbus, from_stop.tram)
         route.drives.append(from_stop)
 
         routes.append(route)
 
     return routes
-
-#print(Drive(), Drive().s)
-#print(check_prefered_way(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie')))
-#print(get_mhd(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie')))
-# print(get_stop_location('STU'))
-#print(get_stop_name((48.1523201, 17.1157568)))
-#print(get_midpoint([(48.146142, 17.1266071), (48.146354, 17.1268332), (48.1468069, 17.1262972), (48.1470263, 17.1263558), (48.1473287, 17.1258482), (48.1472883, 17.1275001), (48.1468974, 17.1291582), (48.1469268, 17.1288952), (48.1469553, 17.1286159), (48.1469687, 17.1290486), (48.1469769, 17.128354), (48.1470035, 17.128772), (48.1470268, 17.1291898), (48.147029, 17.1285067), (48.1470582, 17.1282339), (48.1470704, 17.1289288), (48.1470943, 17.1286499), (48.1471248, 17.1283876), (48.1471359, 17.1290878), (48.1471624, 17.128812), (48.147201, 17.1285467), (48.1472139, 17.1282693), (48.1472277, 17.1289672), (48.1472589, 17.128689), (48.1472752, 17.1284217), (48.1473015, 17.1291263), (48.1473383, 17.1288548), (48.1473639, 17.1285852), (48.147379, 17.1283067)]))
-#check_prefered_way(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie'))
-#mhd = get_mhd(get_coordinates('Rovná 10'), get_coordinates('Kollárovo námestie'))
-print(find('Rovná 10', 'Kollárovo námestie 19'))
-# print(identify_line('[N93]'))
-#f = find('Rovná 2824/17, Bratislava', 'Kollárovo námestie 19')
-# for r in f:
-#    #print(r.drives)
-#    for d in r.drives:
-#        print(d.start, d.start_c, d.dest, d.dest_c, d.length, d.walk, d.bus, d.tbus, d.tram)
