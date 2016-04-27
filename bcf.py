@@ -1,24 +1,25 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+import json
 import imhdsk
 import unicodedata
 from mhd import all_stops, all_stops_rev, trams, busses
-from mapbox import Directions
+from mapbox import Distance
 from datetime import datetime, timedelta
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 
 
-MAPBOX = Directions()
+MAPBOX_TOKEN = 'pk.eyJ1IjoiamFrdWJudmsiLCJhIjoiY2lsOGV4eTkxMDAybXZ5a3F0ZXNyNnR3cSJ9.5y6GM1S5wsDJl-urjVxYcw'  # noqa
 
 
 def normalize(stop):
-    ''' Removes special characters from given stop.
+    """
+    Remove special characters from given stop.
 
-        stop - string
-    '''
-
+    stop - string
+    """
     stop = unicodedata.normalize('NFKD', stop)
     normalized = ''
 
@@ -29,56 +30,75 @@ def normalize(stop):
 
 
 def get_coordinates(address):
-    ''' Returns set of coordinates for given address.
+    """
+    Return set of coordinates for given address.
 
-        address - string
-    '''
-
-    location = Nominatim(timeout=10).geocode('{}, Bratislava'.format(address))
+    address - string
+    """
+    city = 'Bratislava'
+    location = Nominatim(timeout=10).geocode('{0}, {1}'.format(address, city))
+    if location is None:
+        return None
     return (location.latitude, location.longitude)
 
 
 def get_address(location):
-    ''' Returns adress for given set of coordinates.
+    """
+    Return adress for given set of coordinates.
 
-        location - coordinates set
-    '''
-
+    location - coordinates set
+    """
     location = Nominatim(timeout=10).reverse(location)
     return location.address
 
 
 def get_distance_meters(location_a, location_b):
-    ''' Returns distance in meters between given points.
+    """
+    Return distance in meters between given points.
 
-        location_a - coordinates set
-        location_b - coordinates set
-    '''
-
-    distance_meters = int(vincenty(location_a,
-                                   location_b).meters)
+    location_a - coordinates set
+    location_b - coordinates set
+    """
+    distance_seconds = get_distance_seconds(location_a, location_b)
+    # 1.7 m/s is the average walking speed of a human
+    distance_meters = int(distance_seconds * 1.7)
     return distance_meters
 
 
 def get_distance_seconds(location_a, location_b):
-    ''' Returns distance in seconds between given points.
+    """
+    Return distance in seconds between given points.
 
-        location_a - coordinates set
-        location_b - coordinates set
-    '''
+    location_a - coordinates set
+    location_b - coordinates set
+    """
+    global MAPBOX_TOKEN
+    distance_service = Distance(access_token=MAPBOX_TOKEN)
+    # Mapbox takes coordinates in reverse order, thats why I use [::-1].
+    loc_a = {'type': 'Feature',
+             'geometry': {'type': 'Point',
+                          'coordinates': location_a[::-1]}}
 
-    distance_meters = get_distance_meters(location_a, location_b)
-    # 1.4m/s is the average walking speed of a human
-    distance_seconds = int(distance_meters) / 1.4
+    loc_b = {'type': 'Feature',
+             'geometry': {'type': 'Point',
+                          'coordinates': location_b[::-1]}}
+
+    response = distance_service.distances([loc_a, loc_b], 'walking')
+    # response.text is a json in {"code":"Ok", "durations":[[0,2650],[2650,0]]}
+    # format. 'durations' is a matrix of distances in seconds between each two
+    # points, therefore when I use two points, I only need one list. In my list
+    # the first item will always be 0 (distance from A to A), therefore I only
+    # need the second item from the list (distance from A to B).
+    distance_seconds = json.loads(response.text)['durations'][0][1]
     return distance_seconds
 
 
 def get_midpoint(coord_list):
-    ''' Returns middle point from coordinates in given coordinates list.
+    """
+    Return middle point from coordinates in given coordinates list.
 
-        coord_list - list of coordinates
-    '''
-
+    coord_list - list of coordinates
+    """
     lats, longs = 0, 0
     for coord_set in coord_list:
         lat, lon = coord_set
@@ -89,30 +109,35 @@ def get_midpoint(coord_list):
 
 
 def get_nearest_stop(location):
-    # add: second neareset and rename to find nearest stopS
-    ''' Returns nearest stop to the provided location.
+    # TODO: add second nearest and rename to find nearest stops.
+    """
+    Return nearest stop to the provided location.
 
-        location - coordinates set
-    '''
-
+    location - coordinates set
+    """
     stops = {}
     for name, coord_list in all_stops.items():
         midpoint = get_midpoint(coord_list)
-        distance = get_distance_meters(location, midpoint)
-        stops.update({name: distance})
+        distance_meters = int(vincenty(location, midpoint).meters)
+        # 800 meters is about 10 minutes of walking.
+        if distance_meters < 800:
+            distance = get_distance_meters(location, midpoint)
+            stops.update({name: distance})
 
     nearest = min(stops.values())
     for name, distance in stops.items():
         if distance == nearest:
-            return name
+            nearest_name = name
+    del stops[nearest_name]
+    return nearest_name
 
 
 def get_stop_location(name, line_type=None):
-    ''' Returns latitude and longitude of tram stop called <name>.
+    """
+    Return latitude and longitude of tram stop called <name>.
 
-        name - string
-    '''
-
+    name - string
+    """
     if line_type == 'tram':
         stop_location = get_midpoint(trams[name])
         return stop_location
@@ -130,11 +155,11 @@ def get_stop_location(name, line_type=None):
 
 
 def get_stop_name(lat_long):
-    ''' Returns name of tram stop with <lat> and <long> coordinates.
+    """
+    Return name of tram stop with <lat> and <long> coordinates.
 
-        lat_long - coordinates set
-    '''
-
+    lat_long - coordinates set
+    """
     for k, v in all_stops_rev.items():
         if lat_long in k:
             return v
@@ -142,13 +167,13 @@ def get_stop_name(lat_long):
 
 
 def get_mhd(frm, to):
-    ''' Returns all available routes.
+    """
+    Return all available routes.
 
-        frm - coordinates set
-        to - coordinates set
-        walking_delta - integer
-    '''
-
+    frm - coordinates set
+    to - coordinates set
+    walking_delta - integer
+    """
     if frm == to:
         print('Location from and to are the same.')
         return None
@@ -170,18 +195,19 @@ def get_mhd(frm, to):
 
 
 def check_prefered_way(frm, to):
-    ''' Checks if prefered way of transportation is walking or bus/tram.
-        If travel time between frm and to is less than 15 minutes, the prefered
-        way will automatically be walking.
+    """
+    Check if prefered way of transportation is walking or bus/tram.
 
-        frm - coordinates set
-        to - coordinates set
+    If travel time between frm and to is less than 15 minutes, the prefered
+    way will automatically be walking.
 
-        Returns:
-            True - prefered way is to walk
-            False - prefered way is to use the bus/tram
-    '''
+    frm - coordinates set
+    to - coordinates set
 
+    Returns:
+        True - prefered way is to walk
+        False - prefered way is to use the bus/tram
+    """
     walk = get_distance_seconds(frm, to)
     walk = int(walk / 60)
     if walk <= 15:
@@ -199,11 +225,11 @@ def check_prefered_way(frm, to):
 
 
 def identify_line(line):
-    ''' Identifies whether the line is bus, trolleybus or tram.
+    """
+    Identify whether the line is bus, trolleybus or tram.
 
-        line - string
-    '''
-
+    line - string
+    """
     tram = ['1', '2', '3', '4', '5', '6', '8', '9']
     tbus = ['33', '64', '201', '202', '203', '204', '205', '206', '207', '208',
             '209', '210', '211', '212']
@@ -212,10 +238,10 @@ def identify_line(line):
            '54', '56', '57', '58', '59', '61', '63', '65', '66', '67', '68',
            '69', '70', '74', '75', '77', '78', '79', '80', '82', '83', '84',
            '87', '88', '90', '91', '92', '93', '94', '95', '96', '98', '99',
-           '123', '130', '131', '133', '139', '141', '147', '151', '153', '184',
-           '191', '192', '196', 'X13', 'N21', 'N29', 'N31', 'N33', 'N34', 'N37',
-           'N44', 'N47', 'N53', 'N55', 'N56', 'N61', 'N70', 'N72', 'N74', 'N80',
-           'N91', 'N93', 'N95', 'N99']
+           '123', '130', '131', '133', '139', '141', '147', '151', '153',
+           '184', '191', '192', '196', 'X13', 'N21', 'N29', 'N31', 'N33',
+           'N34', 'N37', 'N44', 'N47', 'N53', 'N55', 'N56', 'N61', 'N70',
+           'N72', 'N74', 'N80', 'N91', 'N93', 'N95', 'N99']
 
     if line is not None:
         line = line.strip('[]')
@@ -229,15 +255,16 @@ def identify_line(line):
 
 
 def find(start, dest):
-    ''' Finds routes from starting point to destination point. Creates a list
-        of Route objects which contain Drive objects with information about
-        length, start, destination, coordinates, line number and the type of
-        line.
+    """
+    Find routes from starting point to destination point.
 
-        frm - coordinates set
-        to - coordinates set
-    '''
+    Creates a list of Route objects which contain Drive objects with
+    information about length,start, destination, coordinates, line number and
+    the type of line.
 
+    frm - coordinates set
+    to - coordinates set
+    """
     frm = get_coordinates(start)
     to = get_coordinates(dest)
     walk_or_bus = check_prefered_way(frm, to)
@@ -248,11 +275,12 @@ def find(start, dest):
         drive = imhdsk.Drive()
 
         drive.start = frm
-        drive.start_c = start
+        drive.start_c = list(start)
         drive.dest = to
-        drive.dest_c = dest
-        d_len = int(get_distance_seconds(frm, to) / 60)
-        drive.length = '{} min'.format(d_len)
+        drive.dest_c = list(dest)
+        d_len = get_distance_seconds(frm, to)
+        drive.length = '{} min'.format(int(d_len / 60))
+        drive.dist = int(d_len * 1.7)
         drive.walk = True
         drive.bus = False
         drive.tbus = False
@@ -264,33 +292,34 @@ def find(start, dest):
 
     r = get_mhd(frm, to)
     if r is None:
-        return None
         print('get_mhd() returned no results.')
+        return None
 
     for rt in r:
         i = 0
         d = rt.drives
         route = imhdsk.Route()
+        route.drives = []
 
         # First drive from point A to nearest stop (B_1).
         to_stop = imhdsk.Drive()
         line_type = identify_line(r[0].drives[0].line)
         to_stop.start = start
-        to_stop.start_c = frm
+        to_stop.start_c = list(frm)
         to_stop.dest = r[0].drives[0].start
-        to_stop.dest_c = get_stop_location(to_stop.dest, line_type)
-        to_len = int(get_distance_seconds(frm, to_stop.dest_c) / 60)
+        to_stop.dest_c = list(get_stop_location(to_stop.dest, line_type))
+        to_stop.midpoint = list(get_midpoint([to_stop.start_c,
+                                              to_stop.dest_c]))
+        to_len = get_distance_seconds(frm, to_stop.dest_c)
         if to_len == 0:
             # Minimum value for walk from point A to stop.
             to_len = 1
-        to_stop.length = '{} min'.format(to_len)
+        to_stop.length = '{} min'.format(int(to_len / 60))
+        to_stop.dist = int(to_len * 1.7)
         to_stop.walk = True
         to_stop.bus = False
         to_stop.tbus = False
         to_stop.tram = False
-        print(to_stop.start, to_stop.start_c, to_stop.dest, to_stop.dest_c,
-              to_stop.length, to_stop.walk, to_stop.bus, to_stop.tbus,
-              to_stop.tram)
         route.drives.append(to_stop)
 
         # Drives from/to stops/points (B_1, B_2, ..., B_n).
@@ -300,15 +329,16 @@ def find(start, dest):
                 drv.start_c = d[i - 1].dest_c
                 drv.dest_c = get_stop_location(d[i + 1].start,
                                                identify_line(d[i + 1].line))
+                drv.midpoint = list(get_midpoint([drv.start_c, drv.dest_c]))
+                drv_len = int(drv.length.strip(' min'))
+                drv.dist = int(drv_len * 60 * 1.7)
                 drv.bus = False
                 drv.tbus = False
                 drv.tram = False
-                print(drv.start, drv.start_c, drv.dest, drv.dest_c, drv.length,
-                      drv.walk, drv.bus, drv.tbus, drv.tram)
                 continue
 
-            drv.start_c = get_stop_location(drv.start, line_type)
-            drv.dest_c = get_stop_location(drv.dest, line_type)
+            drv.start_c = list(get_stop_location(drv.start, line_type))
+            drv.dest_c = list(get_stop_location(drv.dest, line_type))
 
             if line_type == 'bus':
                 drv.bus = True
@@ -332,21 +362,21 @@ def find(start, dest):
         from_stop = imhdsk.Drive()
         line_type = identify_line(r[-1].drives[-1].line)
         from_stop.start = r[-1].drives[-1].dest
-        from_stop.start_c = get_stop_location(from_stop.start, line_type)
+        from_stop.start_c = list(get_stop_location(from_stop.start, line_type))
         from_stop.dest = dest
-        from_stop.dest_c = to
-        from_len = int(get_distance_seconds(from_stop.start_c, to) / 60)
-        if from_len == 1:
+        from_stop.dest_c = list(to)
+        from_stop.midpoint = list(get_midpoint([from_stop.start_c,
+                                                from_stop.dest_c]))
+        from_len = get_distance_seconds(from_stop.start_c, to)
+        if from_len == 0:
             # Minimum value for walk from stop to point B.
-            from_len = 0
-        from_stop.length = '{} min'.format(from_len)
+            from_len = 1
+        from_stop.length = '{} min'.format(int(from_len / 60))
+        from_stop.dist = int(from_len * 1.7)
         from_stop.walk = True
         from_stop.bus = False
         from_stop.tbus = False
         from_stop.tram = False
-        print(from_stop.start, from_stop.start_c, from_stop.dest,
-              from_stop.dest_c, from_stop.length, from_stop.walk, from_stop.bus,
-              from_stop.tbus, from_stop.tram)
         route.drives.append(from_stop)
 
         routes.append(route)
