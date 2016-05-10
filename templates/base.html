@@ -2,10 +2,101 @@
 
 <html>
     <head>
-    <title>{{ title }}</title>
+        <title>{{ title }}</title>
         <meta charset="utf-8">
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+        <script src='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.js'></script>
+        <link href='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.css' rel='stylesheet' />
+        <script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script>
+        <link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css' type='text/css' />
+
+        <style>
+            body {
+                font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+                margin: 0;
+                padding: 0;
+                color: black;
+            }
+
+            #container {
+                width: 80%;
+                max-width: 1260px;
+                min-width: 780px; 
+                margin: 0 auto; 
+            }
+
+            #lcol {
+                float: left;
+                width: 30%;
+                height: 400px;
+                background-color: black;
+                position: relative;
+            }
+
+            #footer {
+                font-size: 8px;
+                text-align: center;
+                width: 100%;
+                padding: 5px 0 1px 0;
+                clear: both; 
+            }
+
+            #inputs, #errors, #directions {
+                position: absolute;
+                width: 33.3333%;
+                max-width: 300px;
+                min-width: 200px;
+            }
+
+            #inputs {
+                z-index: 10;
+                top: 10px;
+                left: 10px;
+            }
+
+            #errors {
+                z-index: 8;
+                opacity: 0;
+                padding: 10px;
+                border-radius: 0 0 3px 3px;
+                background: rgba(0,0,0,.25);
+                top: 90px;
+                left: 10px;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+            }
+            
+            li {
+                float: left;
+            }
+            
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+            
+            li a:hover {
+                background-color: #111;
+            }
+            .active {
+                background-color: #4CAF50;
+            }
+        </style>
     </head>
     <body>
-        {% block content %}{% endblock %}
+        <div id="container">
+            <h1>Bakalárska práca - Jakub Novák</h1>
+            {% block content %}{% endblock %}
+            <div id="footer">Jakub Novák - Copyright 2016</div>
+        </div>
     </body>
 </html>

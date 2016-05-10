@@ -1,13 +1,129 @@
-<!-- extend from base layout -->
 {% extends "base.html" %}
-
 {% block content %}
-    <h1>Found</h1>
-    <dl>
-        <dl>From:</dl>
-        <dd>{{ odkial }}</dd>
-        <dl>Where:</dl>
-        <dd>{{ kam }}</dd>
-        <dl>Result:</dl>
-        <dd>{{ result }}</dl>
-{% endblock %} 
+
+<script type="text/javascript">
+    L.mapbox.accessToken = 'pk.eyJ1IjoiamFrdWJudmsiLCJhIjoiY2lsOGV4eTkxMDAybXZ5a3F0ZXNyNnR3cSJ9.5y6GM1S5wsDJl-urjVxYcw';
+</script>
+<!--
+<div id="lcol">
+    <ul id="routes">
+    </ul>
+</div>
+-->
+<div class="top_row">
+    <ul class="routes">
+        {% for r in routes %}
+            <li><a href="{{ url_for('found_route_page', frm=frm, to=to, 
+                            alt=loop.index0) }}"
+                   title="Alt#{{ loop.index0 }}">Alternative#{{ loop.index0 }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script type="text/javascript">
+    function makeMap(num, midpoint, loc_a, loc_b, dist, instructions) {
+        this.num = num;
+        this.width = 50 + '%';
+        this.height = 400 + 'px';
+        this.float = 'left';
+        this.midpoint = midpoint;
+        this.a_lat = loc_a[0];
+        this.a_lon = loc_a[1];
+        this.b_lat = loc_b[0];
+        this.b_lon = loc_b[1];
+        if (dist < 301) {
+            this.zoom = 19;
+        } else if (dist > 300 && dist < 401) {
+            this.zoom = 18;
+        } else if (dist > 400 && dist < 601) {
+            this.zoom = 17;
+        } else {
+            this.zoom = 16;
+        }
+        this.rootElem = document.createElement('div');
+        this.rootElem.id = 'cont' + this.num;
+        this.rootElem.style.width = 100 + '%';
+        document.getElementById('container').appendChild(this.rootElem);
+ 
+        this.instr = document.createElement('div');
+        this.instr.id = 'instr' + this.num;
+        this.instr.style.width = this.width;
+        this.instr.style.height = this.height; //100 + '%';
+        this.instr.style.color = 'white';
+        this.instr.style.backgroundColor = 'black';
+        this.instr.style.cssFloat = 'left';
+        this.instr.style.borderBottom = '3px solid white';
+        this.instr.style.textIndent = 10 + 'px';
+        this.instr.innerHTML = instructions;
+        document.getElementById(this.rootElem.id).appendChild(this.instr);
+ 
+        this.map = document.createElement('div');
+        this.map.id = 'map' + this.num;
+        this.map.style.width = this.width;
+        this.map.style.height = this.height;
+        this.map.style.position = 'relative';
+        this.map.style.cssFloat = 'right';
+        this.map.style.borderBottom = '3px solid white';
+        document.getElementById(this.rootElem.id).appendChild(this.map);
+ 
+        var map = L.mapbox.map('map' + this.num, 'mapbox.streets',
+                               {zoomControl: true}).setView(this.midpoint,
+                                                            this.zoom);
+        map.attributionControl.setPosition('bottomright');
+        var dir = L.mapbox.directions({profile: 'mapbox.walking',
+                                       units: 'metric'});
+        var dirLayer = L.mapbox.directions.layer(dir).addTo(map);
+        var dirRtCtrl = L.mapbox.directions.routesControl('rctrl', dir)
+                                           .addTo(map);
+        dir.setOrigin(L.latLng(this.a_lat, this.a_lon))
+           .setDestination(L.latLng(this.b_lat, this.b_lon))
+           .query();
+        var dirInsCtrl = L.mapbox.directions
+                                 .instructionsControl('instructions', dir)
+                                 .addTo(map);
+    }
+
+    function makeInstructions(num, instructions) {
+        this.num = num;
+        this.width = 100 + '%';
+        this.height = 50 + 'px';
+        this.float = 'left';
+
+        this.rootElem = document.createElement('div');
+        this.rootElem.id = 'cont' + this.num;
+        this.rootElem.style.width = this.width;
+        document.getElementById('container').appendChild(this.rootElem);
+ 
+        this.instr = document.createElement('div');
+        this.instr.id = 'instr' + this.num;
+        this.instr.style.width = this.width;
+        this.instr.style.height = this.height; //100 + '%';
+        this.instr.style.color = 'white';
+        this.instr.style.backgroundColor = 'black';
+        this.instr.style.cssFloat = 'left';
+        this.instr.style.borderBottom = '3px solid white';
+        this.instr.style.textIndent = 10 + 'px';
+        this.instr.innerHTML = instructions;
+        document.getElementById(this.rootElem.id).appendChild(this.instr);
+    }
+</script>
+{% for drive in routes[alt].drives %}
+    {% if drive.walk %}
+        <script type="text/javascript">
+            var map = new makeMap({{ loop.index0 }}, {{ drive.midpoint }},
+                                  {{ drive.start_c }}, {{ drive.dest_c }},
+                                  {{ drive.dist }}, '{{ drive.instr }}');
+        </script>
+    {% else %}
+        <script type="text/javascript">
+            var instr = new makeInstructions({{ loop.index0 }},
+                                             '{{ drive.instr }}');
+        </script>
+    {% endif %}
+{% endfor %}
+</script>
+<p><font size="6"><b>{{ error }}</b></font></p>
+
+{% endblock %}

@@ -1,16 +1,36 @@
-<!-- extend from base layout -->
 {% extends "base.html" %}
-
 {% block content %}
-    <h1>Find</h1>
-    <form method="POST">
-        <dl>
-            <dt>From:</dt>
-            <dd><input type="text" name="frm"/></dd>
-            <dt>Where:</dt>
-            <dd><input type="text" name="where"/></dd>
-            <dd><input type="submit" value="find"/></dd>
-        </dl>
-    </form>
-    <p><font size="6"><b>{{ error_msg }}</b></font></p>
+
+<script>
+    function getLocation() {
+        var frm = document.getElementById('frm');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            frm.innerHTML = "Geolocation is not supported by this browser.";
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+    function showPosition(position) {
+        frm.value = position.coords.latitude + ", " + position.coords.longitude;
+        console.log(position.coords.latitude, position.coords.longitude);
+    }
+</script>
+
+<h2>Find</h2>
+<form method="GET" action="/found">
+    <dl>
+        <dt>From:</dt>
+        <dd>
+            <input type="text" name="frm" id="frm"/>
+            <!-- <button type="button" onclick="getLocation()">Get my location.</button> -->
+        </dd>
+        <dt>Where:</dt>
+        <dd><input type="text" name="to"/></dd>
+        <dd><input type="submit" value="Find routes."/></dd>
+    </dl>
+</form>
+
+<p><font size="6"><b>{{ error }}</b></font></p>
+
 {% endblock %}

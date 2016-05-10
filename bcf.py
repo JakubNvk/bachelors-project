@@ -10,8 +10,23 @@ from datetime import datetime, timedelta
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 
+import functools
+import time
 
 MAPBOX_TOKEN = 'pk.eyJ1IjoiamFrdWJudmsiLCJhIjoiY2lsOGV4eTkxMDAybXZ5a3F0ZXNyNnR3cSJ9.5y6GM1S5wsDJl-urjVxYcw'  # noqa
+
+
+def timeit(func):
+    """Profiling function to measure time it takes to finish function."""
+    @functools.wraps(func)
+    def newfunc(*args, **kwargs):
+        start_time = time.time()
+        out = func(*args, **kwargs)
+        elapsed_time = time.time() - start_time
+        msg = 'function [{}] finished in {} ms'
+        print(msg.format(func.__name__, int(elapsed_time * 1000)))
+        return out
+    return newfunc
 
 
 def normalize(stop):
@@ -109,7 +124,6 @@ def get_midpoint(coord_list):
 
 
 def get_nearest_stop(location):
-    # TODO: add second nearest and rename to find nearest stops.
     """
     Return nearest stop to the provided location.
 
@@ -121,6 +135,12 @@ def get_nearest_stop(location):
         distance_meters = int(vincenty(location, midpoint).meters)
         # 800 meters is about 10 minutes of walking.
         if distance_meters < 800:
+            distance = get_distance_meters(location, midpoint)
+            stops.update({name: distance})
+
+    if len(stops) == 0:
+        for name, coord_list in all_stops.items():
+            midpoint = get_midpoint(coord_list)
             distance = get_distance_meters(location, midpoint)
             stops.update({name: distance})
 
@@ -239,9 +259,9 @@ def identify_line(line):
            '69', '70', '74', '75', '77', '78', '79', '80', '82', '83', '84',
            '87', '88', '90', '91', '92', '93', '94', '95', '96', '98', '99',
            '123', '130', '131', '133', '139', '141', '147', '151', '153',
-           '184', '191', '192', '196', 'X13', 'N21', 'N29', 'N31', 'N33',
-           'N34', 'N37', 'N44', 'N47', 'N53', 'N55', 'N56', 'N61', 'N70',
-           'N72', 'N74', 'N80', 'N91', 'N93', 'N95', 'N99']
+           '184', '191', '192', '196', 'X13', 'X31', 'N21', 'N29', 'N31',
+           'N33', 'N34', 'N37', 'N44', 'N47', 'N53', 'N55', 'N56', 'N61',
+           'N70', 'N72', 'N74', 'N80', 'N91', 'N93', 'N95', 'N99']
 
     if line is not None:
         line = line.strip('[]')
@@ -254,6 +274,17 @@ def identify_line(line):
         return 'bus'
 
 
+def format_instr(routes):
+    """Format route instructions."""
+    for route in routes:
+        for drive in route.drives:
+            if drive.walk:
+                instr = ''
+            instr += '{}\n\n'.format(drive.instr)
+    return routes
+
+
+@timeit
 def find(start, dest):
     """
     Find routes from starting point to destination point.
@@ -269,6 +300,9 @@ def find(start, dest):
     to = get_coordinates(dest)
     walk_or_bus = check_prefered_way(frm, to)
     routes = []
+    walkinstr = 'Presunte sa z {0} na {1}.'
+    driveinstr = ('Na {0} zastávke {1} nastúpte na spoj číslo {2}, smer {3}.'
+                  'Vystúpte na zastávke {4}.')
 
     if walk_or_bus:
         route = imhdsk.Route()
@@ -285,6 +319,7 @@ def find(start, dest):
         drive.bus = False
         drive.tbus = False
         drive.tram = False
+        drive.instr = walkinstr.format(frm, to)
         route.drives.append(drive)
         routes.append(route)
 
@@ -320,12 +355,16 @@ def find(start, dest):
         to_stop.bus = False
         to_stop.tbus = False
         to_stop.tram = False
+        to_stop.instr = walkinstr.format(to_stop.start, to_stop.dest)
         route.drives.append(to_stop)
 
         # Drives from/to stops/points (B_1, B_2, ..., B_n).
+        j = 0
         for drv in d:
             line_type = identify_line(drv.line)
             if drv.walk:
+                if j == 0:
+                    continue
                 drv.start_c = d[i - 1].dest_c
                 drv.dest_c = get_stop_location(d[i + 1].start,
                                                identify_line(d[i + 1].line))
@@ -335,6 +374,7 @@ def find(start, dest):
                 drv.bus = False
                 drv.tbus = False
                 drv.tram = False
+                drv.instr = walkinstr.format(drv.start, drv.dest)
                 continue
 
             drv.start_c = list(get_stop_location(drv.start, line_type))
@@ -342,22 +382,30 @@ def find(start, dest):
 
             if line_type == 'bus':
                 drv.bus = True
+                drv.instr = driveinstr.format('autobusovej', drv.start,
+                                              drv.line.strip('[]'), drv.dest,
+                                              drv.dest)
             else:
                 drv.bus = False
 
             if line_type == 'tbus':
                 drv.tbus = True
+                drv.instr = driveinstr.format('trolejbusovej', drv.start,
+                                              drv.line.strip('[]'), drv.dest,
+                                              drv.dest)
             else:
                 drv.tbus = False
 
             if line_type == 'tram':
                 drv.tram = True
+                drv.instr = driveinstr.format('električkovej', drv.start,
+                                              drv.line.strip('[]'), drv.dest,
+                                              drv.dest)
             else:
                 drv.tram = False
 
             i += 1
             route.drives.append(drv)
-
         # Last drive from last stop (B_n) to point B.
         from_stop = imhdsk.Drive()
         line_type = identify_line(r[-1].drives[-1].line)
@@ -377,6 +425,7 @@ def find(start, dest):
         from_stop.bus = False
         from_stop.tbus = False
         from_stop.tram = False
+        from_stop.instr = walkinstr.format(from_stop.start, from_stop.dest)
         route.drives.append(from_stop)
 
         routes.append(route)
