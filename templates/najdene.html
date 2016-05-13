@@ -4,14 +4,9 @@
 <script type="text/javascript">
     L.mapbox.accessToken = 'pk.eyJ1IjoiamFrdWJudmsiLCJhIjoiY2lsOGV4eTkxMDAybXZ5a3F0ZXNyNnR3cSJ9.5y6GM1S5wsDJl-urjVxYcw';
 </script>
-<!--
-<div id="lcol">
+
+<div id="top_row">
     <ul id="routes">
-    </ul>
-</div>
--->
-<div class="top_row">
-    <ul class="routes">
         {% for r in routes %}
             <li><a href="{{ url_for('found_route_page', frm=frm, to=to, 
                             alt=loop.index0) }}"
@@ -109,6 +104,7 @@
         document.getElementById(this.rootElem.id).appendChild(this.instr);
     }
 </script>
+
 {% for drive in routes[alt].drives %}
     {% if drive.walk %}
         <script type="text/javascript">
