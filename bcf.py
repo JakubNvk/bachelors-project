@@ -301,7 +301,7 @@ def find(start, dest):
     walk_or_bus = check_prefered_way(frm, to)
     routes = []
     walkinstr = 'Presunte sa z {0} na {1}.'
-    driveinstr = ('Na {0} zastávke {1} nastúpte na spoj číslo {2}, smer {3}.'
+    driveinstr = ('Na {0} zastávke {1} nastúpte na spoj číslo {2}, smer {3}.!'
                   'Vystúpte na zastávke {4}.')
 
     if walk_or_bus:

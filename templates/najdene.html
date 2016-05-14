@@ -5,14 +5,27 @@
     L.mapbox.accessToken = 'pk.eyJ1IjoiamFrdWJudmsiLCJhIjoiY2lsOGV4eTkxMDAybXZ5a3F0ZXNyNnR3cSJ9.5y6GM1S5wsDJl-urjVxYcw';
 </script>
 
-<div id="top_row">
+<div id="alternatives">
     <ul id="routes">
         {% for r in routes %}
-            <li><a href="{{ url_for('found_route_page', frm=frm, to=to, 
-                            alt=loop.index0) }}"
-                   title="Alt#{{ loop.index0 }}">Alternative#{{ loop.index0 }}
-                </a>
-            </li>
+            {% if loop.index == loop.length %}
+                <li><a href="{{ url_for('found_route_page', frm=frm, to=to, 
+                                alt=loop.index0) }}"
+                       title="Alt#{{ loop.index0 }}"
+                       style="border-left: 1px solid black;
+                              border-right: 1px solid black;">
+                       Alternative {{ loop.index }}
+                    </a>
+                </li>
+            {% else %}
+                <li><a href="{{ url_for('found_route_page', frm=frm, to=to, 
+                                alt=loop.index0) }}"
+                       title="Alt#{{ loop.index0 }}"
+                       style="border-left: 1px solid black;">
+                       Alternative {{ loop.index }}
+                    </a>
+                </li>
+            {% endif %}
         {% endfor %}
     </ul>
 </div>
@@ -28,15 +41,17 @@
         this.a_lon = loc_a[1];
         this.b_lat = loc_b[0];
         this.b_lon = loc_b[1];
-        if (dist < 301) {
+        console.log(dist);
+        if (dist < 271) {
             this.zoom = 19;
-        } else if (dist > 300 && dist < 401) {
+        } else if (dist > 270 && dist < 366) {
             this.zoom = 18;
-        } else if (dist > 400 && dist < 601) {
+        } else if (dist > 365 && dist < 501) {
             this.zoom = 17;
         } else {
             this.zoom = 16;
         }
+        console.log(this.zoom);
         this.rootElem = document.createElement('div');
         this.rootElem.id = 'cont' + this.num;
         this.rootElem.style.width = 100 + '%';
@@ -93,14 +108,18 @@
  
         this.instr = document.createElement('div');
         this.instr.id = 'instr' + this.num;
-        this.instr.style.width = this.width;
-        this.instr.style.height = this.height; //100 + '%';
+        this.instr.style.width = this.width; //100 + '%';
+        this.instr.style.height = this.height;
         this.instr.style.color = 'white';
         this.instr.style.backgroundColor = 'black';
         this.instr.style.cssFloat = 'left';
         this.instr.style.borderBottom = '3px solid white';
-        this.instr.style.textIndent = 10 + 'px';
-        this.instr.innerHTML = instructions;
+        var ins_arr = instructions.split('!');
+        var ins = '<p>';
+        for (var i = 0; i < ins_arr.length; i++) {
+            ins += ins_arr[i] + '<br>';
+        }
+        this.instr.innerHTML = ins;
         document.getElementById(this.rootElem.id).appendChild(this.instr);
     }
 </script>

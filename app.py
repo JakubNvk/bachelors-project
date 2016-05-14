@@ -4,7 +4,9 @@ from bcf import get_coordinates, get_address, find
 from flask import Flask, request, render_template, abort, redirect, url_for, g
 
 tmpl_dir = 'templates'
-app = Flask(__name__, template_folder=tmpl_dir)
+static_dir = 'static'
+app = Flask(__name__, template_folder=tmpl_dir, static_folder=static_dir)
+print(app.static_folder)
 
 
 @app.route('/', methods=['GET', 'POST'])

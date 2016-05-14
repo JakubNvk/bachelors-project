@@ -16,7 +16,6 @@
             body {
                 /* SIZE/PADDING, FONT FAMILY */
                 font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-                background-image: url('congruent_outline_grey.png');
                 margin: 0;
                 padding: 0;
                 color: black;
@@ -37,6 +36,7 @@
             }
             li {
                 float: left;
+                list-style-type: none;
             }
             li a {
                 display: block;
@@ -44,6 +44,7 @@
                 text-align: center;
                 padding: 14px 16px;
                 text-decoration: none;
+                
             }
             li a:hover {
                 background-color: #111;
@@ -55,12 +56,15 @@
                 background-color: #4CAF50;
             }
             button {
-                background-image: url('location.png');
                 background-repeat: no-repeat;
                 width: 33px;
                 height: 40px;
                 transform: scale(0.5,0.5);
                 padding-top: 7px;
+            }
+            #alternatives {
+                background-color: #3B3B3B;
+                height: 50.5px;
             }
 
             /* -----------HEADER----------- */
@@ -130,7 +134,7 @@
             }
         </style>
     </head>
-    <body>
+    <body style="background-image: url('static/congruent_outline_grey.png');">
         <div id="container">
             <div id="header"><h1>Bakalárska práca - Jakub Novák</h1></div>
             {% block content %}{% endblock %}
