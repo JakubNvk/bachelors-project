@@ -55,17 +55,6 @@
         this.rootElem.style.width = 100 + '%';
         document.getElementById('container').appendChild(this.rootElem);
  
-//        this.instr = document.createElement('div');
-//        this.instr.id = 'instr' + this.num;
-//        this.instr.style.width = this.width;
-//        this.instr.style.height = this.height; //100 + '%';
-//        this.instr.style.color = 'black';
-//        this.instr.style.backgroundColor = '#87CEE8';
-//        this.instr.style.cssFloat = 'left';
-//        this.instr.style.borderBottom = '3px solid #3B3B3B';
-//        this.instr.innerHTML = instructions;
-//        document.getElementById(this.rootElem.id).appendChild(this.instr);
- 
         this.map = document.createElement('div');
         this.map.id = 'map' + this.num;
         this.map.style.width = this.width;
@@ -105,7 +94,7 @@
  
         this.instr = document.createElement('div');
         this.instr.id = 'instr' + this.num;
-        this.instr.style.width = this.width; //100 + '%';
+        this.instr.style.width = this.width;
         this.instr.style.backgroundColor = '#87CEE8';
         this.instr.style.cssFloat = 'left';
         this.instr.style.paddingTop = 15 + 'px';
