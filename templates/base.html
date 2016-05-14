@@ -65,6 +65,7 @@
             #alternatives {
                 background-color: #3B3B3B;
                 height: 50.5px;
+                border-bottom: 3px solid #3B3B3B;
             }
 
             /* -----------HEADER----------- */
@@ -80,16 +81,16 @@
 
             /* -----------MAIN CONTAINER----------- */
             #container {
-                width: 80%;
-                max-width: 1260px;
-                min-width: 780px;
+                width: 611px;
+                min-width: 611px;
+                max-height: 611px;
                 background-color: #87CEE8;
                 margin: 10px auto;
             }
 
             form {
                 padding: 20px 0 20px 0;
-                padding-left: 43%;
+                padding-left: 35%;
             }
 
             /* -----------FOOTER----------- */
@@ -99,7 +100,7 @@
                 text-align: center;
                 padding: 7px 0 1px 0;
                 background-color: #0F52BA;
-                border-top: 1px solid black;
+                border-top: 2px solid black;
                 position: relative;
                 clear: both; 
             }
@@ -136,7 +137,7 @@
     </head>
     <body style="background-image: url('static/congruent_outline_grey.png');">
         <div id="container">
-            <div id="header"><h1>Bakalárska práca - Jakub Novák</h1></div>
+            <div id="header"><h1>Bakalárska práca<br>Jakub Novák</h1></div>
             {% block content %}{% endblock %}
             <div id="footer">Jakub Novák - Copyright 2016</div>
         </div>
